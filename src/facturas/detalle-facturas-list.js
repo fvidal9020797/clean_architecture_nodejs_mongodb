@@ -1,12 +1,11 @@
-import makeFactura from './factura'
+import makeDetalleFactura from './detalle-factura'
 import { UniqueConstraintError } from '../helpers/errors'
 
-export default function makeFacturaList ({ database }) {
+export default function makeDetalleFacturaList ({ database }) {
   return Object.freeze({
     add,
-    // findByEmail,
-    findById,
-    getAll,
+    findByIdFactura,
+    // findById,
     // getItems,
     // remove,
     // replace,
@@ -14,15 +13,24 @@ export default function makeFacturaList ({ database }) {
   })
 
   
+  async function findByIdFactura ({idFactura}) {
+    const db = await database
+    const results = await db
+      .collection('detalle_facturas')
+      .find({ idFactura })
+      .toArray()
+    return results.map(documentToContact)
+  }
 
-  async function add ({ contactId, ...factura }) {
+  async function add ({ contactId, ...detalleFactura }) {
     const db = await database
     if (contactId) {
       contact._id = db.makeId(contactId)
     }
+    detalleFactura.idItem=db.makeId(detalleFactura.idItem);
     const { result, ops } = await db
-      .collection('facturas')
-      .insertOne(factura)
+      .collection('detalle_facturas')
+      .insertOne(detalleFactura)
       .catch(mongoError => {
         const [errorCode] = mongoError.message.split(' ')
         if (errorCode === 'E11000') {
@@ -34,31 +42,15 @@ export default function makeFacturaList ({ database }) {
         throw mongoError
       })
     return {
-      success: result.ok === 1,
-      created: ops[0]
+      success: result.ok === 1
     }
   }
+  // todo:
+  async function getItems () {}
 
-  async function findById ({ _id }) {
-    const db = await database
-    const found = await db
-      .collection('facturas')
-      .findOne({ _id: db.makeId(_id) })
-    if (found) {
-      return found
-    }
-    return null
-  }
-
-  async function getAll () {
-    const db = await database
-    const results = await db
-      .collection('facturas')
-      .find()
-      .toArray()
-    return results
-  }
-
+  // todo:
+  async function findById () {}
+  
   // todo:
   async function remove () {}
 
@@ -68,9 +60,7 @@ export default function makeFacturaList ({ database }) {
   // todo:
   async function update (contact) {}
 
-  async function getItems (){}
-
-  function documentToContact ({ _id: facturaId, ...doc }) {
-    return makeFactura({ facturaId, ...doc })
+  function documentToContact ({ _id: detalleFacturaId, ...doc }) {
+    return makeDetalleFactura({ detalleFacturaId, ...doc })
   }
 }

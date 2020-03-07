@@ -1,25 +1,24 @@
 import requiredParam from '../helpers/required-param'
 import { InvalidPropertyError } from '../helpers/errors'
-import isValidEmail from '../helpers/is-valid-email.js'
-import upperFirst from '../helpers/upper-first'
 
 export default function makeDetalleFactura (
   detalleFacturaInfo = requiredParam('detalleFacturaInfo')
 ) {
   const validDetalleFactura = validate(detalleFacturaInfo)
   const normalDetalleFactura = normalize(validDetalleFactura)
-  return Object.freeze(normalDetalleFactura)
+  return normalDetalleFactura;
+  // return Object.freeze(normalDetalleFactura)
 
   function validate ({
-    idFactura = requiredParam('id_factura'),
-    idItem = requiredParam('id_item'),
+    idFactura,
+    idItem,
     precio=requiredParam('precio'),
     cantidad=requiredParam('cantidad'),
-    total=requiredParam('total')
+    total=precio*cantidad
   } = {}) {
-    validateCabezera('nit', nit)
-    validateCabezera('name', name)
-    return { nit, name }
+    // validateCabezera('id_factura', idFactura)
+    // validateCabezera('name', name)
+    return { idFactura, idItem, precio, cantidad, total }
   }
 
   function validateCabezera (label, name) {
@@ -30,11 +29,13 @@ export default function makeDetalleFactura (
     }
   }
 
-
-  function normalize ({ nit, name }) {
+  function normalize ({ idFactura,  idItem, precio, cantidad, total }) {
     return {
-      nit,
-      name//: upperFirst(lastName),
+      idFactura,
+      idItem,//: upperFirst(lastName),
+      precio, 
+      cantidad,
+      total
     }
   }
 }

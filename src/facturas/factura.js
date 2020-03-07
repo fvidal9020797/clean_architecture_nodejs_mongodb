@@ -11,12 +11,13 @@ export default function makeFactura (
   return Object.freeze(normalFactura)
 
   function validate ({
+    facturaId,
     nit = requiredParam('nit'),
     name = requiredParam('name'),
   } = {}) {
     validateCabezera('nit', nit)
     validateCabezera('name', name)
-    return { nit, name }
+    return {nit, name }
   }
 
   function validateCabezera (label, name) {
@@ -28,7 +29,7 @@ export default function makeFactura (
   }
 
 
-  function normalize ({ nit, name }) {
+  function normalize ({  nit, name }) {
     return {
       nit,
       name//: upperFirst(lastName),
