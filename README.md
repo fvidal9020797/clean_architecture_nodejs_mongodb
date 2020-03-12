@@ -8,7 +8,7 @@ Follow these steps at the command line:
 
 ### 1. Clone and Install 
 ```bash
-git clone https://github.com/arcdev1/mm_express_api_example.git
+https://github.com/fvidal9020797/clean_architecture_nodejs_mongodb.git
 cd mm_express_api_example
 npm install
 ```
